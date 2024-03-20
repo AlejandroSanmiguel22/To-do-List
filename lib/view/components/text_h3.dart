@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class TextH2 extends StatelessWidget {
-  const TextH2(this.text,{super.key});
+class TextH3 extends StatelessWidget {
+  const TextH3(this.text,{super.key});
 
   final String text;
   @override
@@ -11,9 +11,8 @@ class TextH2 extends StatelessWidget {
       textAlign: TextAlign.center,
       style: const TextStyle(
         fontFamily: "Schyler",
-        fontSize: 16,
+        fontSize: 15.5,
       ),
     );
   }
 }
-

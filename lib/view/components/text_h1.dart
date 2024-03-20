@@ -6,6 +6,7 @@ class TextH1 extends StatelessWidget {
     Key? key,
     this.color,
   }) : super(key: key);
+  
   final String text;
   final Color? color;
 
@@ -14,6 +15,7 @@ class TextH1 extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
+        fontFamily: "Schyler",
         fontSize: 20,
         fontWeight: FontWeight.w700,
         color: color,
