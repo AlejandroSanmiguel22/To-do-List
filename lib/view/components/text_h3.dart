@@ -12,6 +12,7 @@ class TextH3 extends StatelessWidget {
       style: const TextStyle(
         fontFamily: "Schyler",
         fontSize: 15.5,
+        color: Colors.black
       ),
     );
   }
