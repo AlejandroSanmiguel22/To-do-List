@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_list/view/components/image.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -14,13 +15,9 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         leadingWidth: 141,
         toolbarHeight: 129,
-        leading: Row(
+        leading: const Row(
           children: [
-            Image.asset(
-              'assets/images/shape.png',
-              width: 141,
-              height: 129,
-            ),
+            Imag("assets/images/shape.png", 141,129)
           ],
         ),
         backgroundColor: const Color(0xFF40B7AD),

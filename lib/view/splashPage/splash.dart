@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list/view/home.dart';
+import 'package:todo_list/view/components/image.dart';
+import 'package:todo_list/view/components/text_h1.dart';
+import 'package:todo_list/view/components/text_h2.dart';
+import 'package:todo_list/view/homePage/home.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
@@ -7,40 +10,22 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: SafeArea(
+        body: SafeArea(
       child: Column(
         children: [
-          Row(
+          const Row(
             children: [
-              Image.asset(
-                'assets/images/shape.png',
-                width: 141,
-                height: 129,
-              ),
+              Imag("assets/images/shape.png",141,129),
             ],
           ),
           const SizedBox(height: 79),
-          Image.asset(
-            'assets/images/onboarding-image.png',
-            width: 180,
-            height: 200,
-          ),
+          const Imag('assets/images/onboarding-image.png',180,168),
           const SizedBox(height: 70),
-          const Text(
-            "Lista de Tareas",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-          ),
+          const TextH1("Lista de Tareas"),
           const SizedBox(height: 21),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              "La mejor forma para que no se te olvide nada es anotarlo. Guardar tus tareas y ve completando poco a poco para aumentar tu productividad",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
+            child: TextH2("La mejor forma para que no se te olvide nada es anotarlo. Guardar tus tareas y ve completando poco a poco para aumentar tu productividad")
           ),
           const SizedBox(height: 30),
           ElevatedButton(

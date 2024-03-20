@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list/view/home.dart';
-import 'package:todo_list/view/splash.dart';
+import 'package:todo_list/view/homePage/home.dart';
+import 'package:todo_list/view/splashPage/splash.dart';
 
 
 void main() => runApp(const MyApp());
@@ -25,7 +25,7 @@ Widget build(BuildContext context) {
         bodyColor: textColor
       )
     ),
-    home: const MyHomePage(),
+    home: const SplashPage(),
   );
 }
 
