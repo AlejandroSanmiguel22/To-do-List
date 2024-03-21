@@ -4,16 +4,34 @@ import 'package:todo_list/view/components/image.dart';
 import 'package:todo_list/view/components/text_h1.dart';
 import 'package:todo_list/view/components/text_h3.dart';
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final taskList = <Task>[
+    Task("Sacar a los perros"),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: const Column(
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Header(),
-          Expanded(child: _TaskList()),
+          const _Header(),
+          Expanded(
+            child: _TaskList(
+              taskList,
+              onTaskDoneChange: (task) {
+                task.done = !task.done;
+                setState(() {});
+              },
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -22,88 +40,80 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
-
-  void _showNewTaskModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (_) => _NewTaskModal(
-        onTaskCreated: (Task task) {
-          print(task.title);
-        },
-      ),
-    );
-  }
+void _showNewTaskModal(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) => _NewTaskModal(
+      onTaskCreated: (Task task) {
+        setState(() {
+          taskList.add(task);
+        });
+      },
+    ),
+  );
+}
 }
 
 class _NewTaskModal extends StatelessWidget {
-  // ignore: unused_element
-  _NewTaskModal({super.key, required this.onTaskCreated});
-
-  final _controller = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   final void Function(Task task) onTaskCreated;
+
+  _NewTaskModal({Key? key, required this.onTaskCreated}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 33,
-        vertical: 23,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const TextH1("Nueva Tarea"),
-          const SizedBox(height: 26),
-          TextField(
-            controller: _controller,
-            decoration: InputDecoration(
+    return SingleChildScrollView(
+      padding: MediaQuery.of(context).viewInsets,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 33, vertical: 23),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const TextH1("Nueva Tarea"),
+            const SizedBox(height: 26),
+            TextField(
+              controller: _controller,
+              decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                hintText: "Nombre de la tarea"),
-          ),
-          const SizedBox(height: 26),
-          Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(306, 54),
-                  backgroundColor: const Color(0xFF40B7AD)),
-              onPressed: () {
-                if (_controller.text.isEmpty) {
-                  final task = Task(_controller.text);
-                  onTaskCreated(task);
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const TextH1('Guardar', color: Color(0xF7FFFFFF)),
+                hintText: "Nombre de la tarea",
+              ),
             ),
-          )
-        ],
+            const SizedBox(height: 26),
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(306, 54),
+                  backgroundColor: const Color(0xFF40B7AD),
+                ),
+                onPressed: () {
+                  if (_controller.text.isNotEmpty) {
+                    final task = Task(_controller.text);
+                    onTaskCreated(task);
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: const TextH1('Guardar', color: Color(0xF7FFFFFF)),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
-class _TaskList extends StatefulWidget {
+class _TaskList extends StatelessWidget {
   // ignore: unused_element
-  const _TaskList({super.key});
-  @override
-  State<_TaskList> createState() => _TaskListState();
-}
+  const _TaskList(this.taskList, {required this.onTaskDoneChange, super.key});
 
-class _TaskListState extends State<_TaskList> {
-  final tacksList = <Task>[
-    Task("Sacar a los perros"),
-    Task("Estudiar para el examen"),
-    Task("Sacar la basura"),
-    Task("Hacer ejercicio"),
-    Task("Sacar la basura"),
-    Task("Hacer ejercicio"),
-  ];
+  final List<Task> taskList;
+  final void Function(Task task) onTaskDoneChange;
 
   @override
   Widget build(BuildContext context) {
@@ -118,17 +128,12 @@ class _TaskListState extends State<_TaskList> {
           const TextH1('Tareas'),
           Expanded(
             child: ListView.separated(
-              itemBuilder: (context, index) => _TaskItem(
-                tacksList[index],
-                onTap: () {
-                  tacksList[index].done = !tacksList[index].done;
-                  setState(() {});
-                },
-              ),
+              itemBuilder: (context, index) => _TaskItem(taskList[index],
+                  onTap: () => onTaskDoneChange(taskList[index])),
               separatorBuilder: (context, index) => const SizedBox(
                 height: 16,
               ),
-              itemCount: tacksList.length,
+              itemCount: taskList.length,
             ),
           ),
         ],
