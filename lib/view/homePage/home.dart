@@ -38,6 +38,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     taskRepository.saveTasks(snapshot.data!);
                     setState(() {});
                   },
+                  onDelete: (task) {
+                    setState(() {
+                      taskRepository.deleteTask(task);
+                      taskRepository.saveTasks(snapshot.data!);
+                    });
+                  },
                 );
               },
             ),
@@ -120,10 +126,12 @@ class _NewTaskModal extends StatelessWidget {
 
 class _TaskList extends StatelessWidget {
   // ignore: unused_element
-  const _TaskList(this.taskList, {required this.onTaskDoneChange, super.key});
+  const _TaskList(this.taskList,
+      {required this.onTaskDoneChange, required this.onDelete});
 
   final List<Task> taskList;
   final void Function(Task task) onTaskDoneChange;
+  final void Function(Task task) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +147,8 @@ class _TaskList extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) => _TaskItem(taskList[index],
-                  onTap: () => onTaskDoneChange(taskList[index])),
+                  onTap: () => onTaskDoneChange(taskList[index]),
+                  onDelete: () => onDelete(taskList[index])),
               itemCount: taskList.length,
             ),
           ),
@@ -188,10 +197,11 @@ class _Header extends StatelessWidget {
 
 class _TaskItem extends StatelessWidget {
   // ignore: unused_element
-  const _TaskItem(this.task, {Key? key, this.onTap});
+  const _TaskItem(this.task, {Key? key, this.onTap, this.onDelete});
 
   final Task task;
   final VoidCallback? onTap;
+  final VoidCallback? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -222,9 +232,12 @@ class _TaskItem extends StatelessWidget {
               ),
             ),
             // Icono de cierre
-            const Icon(
-              Icons.close, 
-              color: Color(0xFF40B7AD), // Color del icono
+            GestureDetector(
+              onTap: onDelete,
+              child: const Icon(
+                Icons.close,
+                color: Color(0xFF40B7AD), // Color del icono
+              ),
             ),
           ],
         ),
