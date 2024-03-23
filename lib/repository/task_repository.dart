@@ -10,7 +10,7 @@ class TaskRepository {
     return prefs.setStringList('tasks', jsonTasks);
   }
 
-  Future<bool> deleteLastTask() async {
+  Future<bool> deleteLastTask(Task task) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonTasks = prefs.getStringList('tasks') ?? [];
 

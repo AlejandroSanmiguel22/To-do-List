@@ -26,6 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: FutureBuilder<List<Task>>(
               future: taskRepository.getTasks(),
               builder: (context, snapshot) {
+
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                     child: Text("No hay tareas"),
@@ -36,9 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   onTaskDoneChange: (task) {
                     task.done = !task.done;
                     taskRepository.saveTasks(snapshot.data!);
-                    setState(() {
-                      
-                    });
+                    setState(() {});
                   },
                 );
               },
@@ -59,8 +58,13 @@ class _MyHomePageState extends State<MyHomePage> {
       isScrollControlled: true,
       builder: (_) => _NewTaskModal(
         onTaskCreated: (Task task) {
-          taskRepository.addTask(task);
-          setState(() {});
+          if (task.done) {
+            taskRepository.addTask(task);
+            setState(() {});
+          } else {
+            taskRepository.deleteLastTask(task);
+            setState(() {});
+          }
         },
       ),
     );
@@ -122,11 +126,10 @@ class _NewTaskModal extends StatelessWidget {
 
 class _TaskList extends StatelessWidget {
   // ignore: unused_element
-  const _TaskList(this.taskList,{required this.onTaskDoneChange, super.key});
+  const _TaskList(this.taskList, {required this.onTaskDoneChange, super.key});
 
   final List<Task> taskList;
   final void Function(Task task) onTaskDoneChange;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +198,7 @@ class _TaskItem extends StatelessWidget {
 
   final Task task;
   final VoidCallback? onTap;
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -214,7 +217,7 @@ class _TaskItem extends StatelessWidget {
                       : Icons.check_box_outline_blank,
                   color: const Color(0xFF40B7AD)),
               const SizedBox(width: 10),
-              TextH3(task.title)
+              TextH3(task.title),
             ],
           ),
         ),
