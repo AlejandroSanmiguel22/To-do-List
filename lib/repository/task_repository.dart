@@ -35,13 +35,8 @@ class TaskRepository {
   }
 
   Future<bool> saveTasks(List<Task> tasks) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final jsonTasks = tasks.map((e) => jsonEncode(e.toJson())).toList();
-      return await prefs.setStringList('tasks', jsonTasks);
-    } catch (e) {
-      print("Error al guardar tareas: $e");
-      return false; // Indica que ha ocurrido un error al guardar las tareas
-    }
+    final prefs = await SharedPreferences.getInstance();
+    final jsonTasks = tasks.map((e) => jsonEncode(e.toJson())).toList();
+    return prefs.setStringList('tasks', jsonTasks);
   }
 }

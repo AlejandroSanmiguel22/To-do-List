@@ -8,11 +8,11 @@ class TextH3 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      textAlign: TextAlign.center,
+      textAlign: TextAlign.left,
       style: const TextStyle(
         fontFamily: "Schyler",
         fontSize: 15.5,
-        color: Colors.black
+        color: Colors.black,
       ),
     );
   }

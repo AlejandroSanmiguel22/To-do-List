@@ -57,13 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
       isScrollControlled: true,
       builder: (_) => _NewTaskModal(
         onTaskCreated: (Task task) {
-          if (task.done) {
-            taskRepository.addTask(task);
-            setState(() {});
-          } else {
-            taskRepository.deleteLastTask(task);
-            setState(() {});
-          }
+          taskRepository.addTask(task);
+          setState(() {});
         },
       ),
     );
@@ -193,32 +188,45 @@ class _Header extends StatelessWidget {
 
 class _TaskItem extends StatelessWidget {
   // ignore: unused_element
-  const _TaskItem(this.task, {super.key, this.onTap});
+  const _TaskItem(this.task, {Key? key, this.onTap});
 
   final Task task;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(21),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 18),
-          child: Row(
-            children: [
-              Icon(
-                  task.done
-                      ? Icons.check_box_rounded
-                      : Icons.check_box_outline_blank,
-                  color: const Color(0xFF40B7AD)),
-              const SizedBox(width: 10),
-              TextH3(task.title),
-            ],
-          ),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(21),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 21, vertical: 18),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // GestureDetector solo para el icono del checkbox
+            GestureDetector(
+              onTap: onTap,
+              child: Icon(
+                task.done
+                    ? Icons.check_box_rounded
+                    : Icons.check_box_outline_blank,
+                color: const Color(0xFF40B7AD),
+              ),
+            ),
+            const SizedBox(width: 10),
+            // Texto de la tarea
+            Expanded(
+              child: TextH3(
+                task.title,
+              ),
+            ),
+            // Icono de cierre
+            const Icon(
+              Icons.close, 
+              color: Color(0xFF40B7AD), // Color del icono
+            ),
+          ],
         ),
       ),
     );
