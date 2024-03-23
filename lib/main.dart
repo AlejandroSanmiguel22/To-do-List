@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo_list/view/homePage/home.dart';
 import 'package:todo_list/view/splashPage/splash.dart';
 
 
