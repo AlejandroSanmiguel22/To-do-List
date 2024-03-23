@@ -26,7 +26,6 @@ class _MyHomePageState extends State<MyHomePage> {
             child: FutureBuilder<List<Task>>(
               future: taskRepository.getTasks(),
               builder: (context, snapshot) {
-
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(
                     child: Text("No hay tareas"),
