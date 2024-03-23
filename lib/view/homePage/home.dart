@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_list/model/task.dart';
+import 'package:todo_list/repository/task_repository.dart';
 import 'package:todo_list/view/components/image.dart';
 import 'package:todo_list/view/components/text_h1.dart';
 import 'package:todo_list/view/components/text_h3.dart';
@@ -12,9 +13,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final taskList = <Task>[
-    Task("Sacar a los perros"),
-  ];
+  final TaskRepository taskRepository = TaskRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +23,24 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           const _Header(),
           Expanded(
-            child: _TaskList(
-              taskList,
-              onTaskDoneChange: (task) {
-                task.done = !task.done;
-                setState(() {});
+            child: FutureBuilder<List<Task>>(
+              future: taskRepository.getTasks(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text("No hay tareas"),
+                  );
+                }
+                return _TaskList(
+                  snapshot.data!,
+                  onTaskDoneChange: (task) {
+                    task.done = !task.done;
+                    taskRepository.saveTasks(snapshot.data!);
+                    setState(() {
+                      
+                    });
+                  },
+                );
               },
             ),
           ),
@@ -40,19 +52,19 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-void _showNewTaskModal(BuildContext context) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (_) => _NewTaskModal(
-      onTaskCreated: (Task task) {
-        setState(() {
-          taskList.add(task);
-        });
-      },
-    ),
-  );
-}
+
+  void _showNewTaskModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => _NewTaskModal(
+        onTaskCreated: (Task task) {
+          taskRepository.addTask(task);
+          setState(() {});
+        },
+      ),
+    );
+  }
 }
 
 class _NewTaskModal extends StatelessWidget {
@@ -110,10 +122,11 @@ class _NewTaskModal extends StatelessWidget {
 
 class _TaskList extends StatelessWidget {
   // ignore: unused_element
-  const _TaskList(this.taskList, {required this.onTaskDoneChange, super.key});
+  const _TaskList(this.taskList,{required this.onTaskDoneChange, super.key});
 
   final List<Task> taskList;
   final void Function(Task task) onTaskDoneChange;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -127,12 +140,9 @@ class _TaskList extends StatelessWidget {
         children: [
           const TextH1('Tareas'),
           Expanded(
-            child: ListView.separated(
+            child: ListView.builder(
               itemBuilder: (context, index) => _TaskItem(taskList[index],
                   onTap: () => onTaskDoneChange(taskList[index])),
-              separatorBuilder: (context, index) => const SizedBox(
-                height: 16,
-              ),
               itemCount: taskList.length,
             ),
           ),
@@ -185,6 +195,7 @@ class _TaskItem extends StatelessWidget {
 
   final Task task;
   final VoidCallback? onTap;
+  
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:todo_list/view/components/image.dart';
 import 'package:todo_list/view/components/text_h1.dart';
 import 'package:todo_list/view/components/text_h2.dart';
-import 'package:todo_list/view/components/text_h3.dart';
 import 'package:todo_list/view/homePage/home.dart';
 
 class SplashPage extends StatelessWidget {
