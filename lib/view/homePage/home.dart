@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   onDelete: (task) {
                     setState(() {
-                      taskRepository.deleteTask(task);
+                      snapshot.data!.remove(task);
                       taskRepository.saveTasks(snapshot.data!);
                     });
                   },
@@ -54,6 +54,16 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () => _showNewTaskModal(context),
         child: const Icon(Icons.add, size: 35),
       ),
+     /*  bottomSheet: const Text(
+            'Hecho por: Alejandro Sanmiguel',
+            style: TextStyle(
+              color:  Colors.grey, // Color de texto suave
+              fontSize: 12,
+              fontStyle: FontStyle.italic, // Estilo de texto en cursiva
+            ),
+            textAlign: TextAlign.start,
+          ), 
+      */
     );
   }
 
