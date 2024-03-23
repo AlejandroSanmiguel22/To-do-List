@@ -10,20 +10,11 @@ class TaskRepository {
     return prefs.setStringList('tasks', jsonTasks);
   }
 
-  Future<bool> deleteLastTask() async {
+  Future<bool> deleteTask(Task task) async {
     final prefs = await SharedPreferences.getInstance();
     final jsonTasks = prefs.getStringList('tasks') ?? [];
-
-    // Verificamos que haya al menos una tarea para eliminar
-    if (jsonTasks.isNotEmpty) {
-      // Eliminamos la última tarea de la lista
-      jsonTasks.removeLast();
-      // Actualizamos las tareas en SharedPreferences
-      return prefs.setStringList('tasks', jsonTasks);
-    } else {
-      // Si no hay tareas, no hay nada que eliminar
-      return false;
-    }
+    jsonTasks.removeWhere((jsonTask) => jsonEncode(task.toJson()) == jsonTask);
+    return prefs.setStringList('tasks', jsonTasks);
   }
 
   Future<List<Task>> getTasks() async {
@@ -35,13 +26,8 @@ class TaskRepository {
   }
 
   Future<bool> saveTasks(List<Task> tasks) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final jsonTasks = tasks.map((e) => jsonEncode(e.toJson())).toList();
-      return await prefs.setStringList('tasks', jsonTasks);
-    } catch (e) {
-      print("Error al guardar tareas: $e");
-      return false; // Indica que ha ocurrido un error al guardar las tareas
-    }
+    final prefs = await SharedPreferences.getInstance();
+    final jsonTasks = tasks.map((e) => jsonEncode(e.toJson())).toList();
+    return prefs.setStringList('tasks', jsonTasks);
   }
 }

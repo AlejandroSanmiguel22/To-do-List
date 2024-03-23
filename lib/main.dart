@@ -24,7 +24,7 @@ Widget build(BuildContext context) {
         bodyColor: textColor
       )
     ),
-    home: const SplashPage(),
+    home: SplashPage(),
   );
 }
 
