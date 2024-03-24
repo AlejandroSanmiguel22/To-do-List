@@ -21,7 +21,7 @@ Widget build(BuildContext context) {
       scaffoldBackgroundColor: backgroundColor,
       textTheme: Theme.of(context).textTheme.apply(
         fontFamily: "Poppins",
-        bodyColor: textColor
+        bodyColor: textColor 
       )
     ),
     home: SplashPage(),
